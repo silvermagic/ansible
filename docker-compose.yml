@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  registry:
+    build: registry/
+    volumes:
+      - /opt/registry:/var/lib/registry
+    network_mode: "host"
+    container_name: "registry"
+    image: "registry:4.0.2"
+
+  kolla:
+    build: kolla/
+    volumes:
+      - ./kolla-ansible/etc/kolla/:/etc/kolla:rw
+      - ./kolla-ansible/ansible/inventory:/inventory:rw
+      - /root/.ssh:/root/.ssh:rw
+    depends_on:
+      - registry
+    network_mode: "host"
+    container_name: "kolla"
+    image: "kolla:4.0.2"
+
